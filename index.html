@@ -1,0 +1,937 @@
+
+html_content = """<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جدول علماء الرياضيات - الفصل الرابع والخامس</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #e94560, #ff6b6b, #feca57);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(233, 69, 96, 0.3);
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #a0a0a0;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+        }
+        
+        .chapter-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 700;
+            margin-left: 8px;
+        }
+        
+        .badge-ch4 {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: #000;
+        }
+        
+        .badge-ch5 {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+        }
+        
+        .badge-ancient {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: #fff;
+        }
+        
+        .badge-islamic {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: #000;
+        }
+        
+        .badge-renaissance {
+            background: linear-gradient(135deg, #fa709a, #fee140);
+            color: #000;
+        }
+        
+        .badge-modern {
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            color: #000;
+        }
+        
+        .table-wrapper {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+        
+        .section-title {
+            font-size: 1.6em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title .icon {
+            font-size: 1.3em;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95em;
+        }
+        
+        thead th {
+            background: linear-gradient(135deg, #e94560, #c73e54);
+            color: #fff;
+            padding: 15px 12px;
+            text-align: right;
+            font-weight: 700;
+            font-size: 1em;
+            position: sticky;
+            top: 0;
+        }
+        
+        thead th:first-child {
+            border-radius: 0 12px 0 0;
+        }
+        
+        thead th:last-child {
+            border-radius: 12px 0 0 0;
+        }
+        
+        tbody tr {
+            transition: all 0.3s ease;
+        }
+        
+        tbody tr:hover {
+            background: rgba(233, 69, 96, 0.1);
+            transform: scale(1.01);
+        }
+        
+        tbody tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.03);
+        }
+        
+        tbody tr:nth-child(even):hover {
+            background: rgba(233, 69, 96, 0.1);
+        }
+        
+        td {
+            padding: 14px 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            vertical-align: top;
+            line-height: 1.6;
+        }
+        
+        .scientist-name {
+            font-weight: 700;
+            color: #feca57;
+            font-size: 1.05em;
+        }
+        
+        .period {
+            color: #a0d2eb;
+            font-size: 0.9em;
+        }
+        
+        .works-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .works-list li {
+            padding: 3px 0;
+            position: relative;
+            padding-right: 18px;
+        }
+        
+        .works-list li::before {
+            content: "▸";
+            position: absolute;
+            right: 0;
+            color: #e94560;
+        }
+        
+        .era-cell {
+            font-weight: 600;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 15px 20px;
+            border-radius: 50px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            font-size: 1em;
+            font-family: 'Cairo', sans-serif;
+            margin-bottom: 25px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        .search-box::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .search-box:focus {
+            border-color: #e94560;
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 20px rgba(233, 69, 96, 0.2);
+        }
+        
+        .stats-bar {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 12px 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 1.8em;
+            font-weight: 800;
+            color: #feca57;
+        }
+        
+        .stat-label {
+            font-size: 0.85em;
+            color: #a0a0a0;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9em;
+        }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 1.6em; }
+            .table-wrapper { padding: 15px; }
+            td, th { padding: 10px 8px; font-size: 0.85em; }
+            .section-title { font-size: 1.2em; }
+        }
+        
+        .highlight {
+            background: rgba(254, 202, 87, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 علماء الرياضيات في الفصل الرابع والخامس</h1>
+        <p class="subtitle">تاريخ الرياضيات - نشأة علم الجبر والهندسة | مدرسة الإسكندرية والعصور الحديثة</p>
+        
+        <div class="stats-bar">
+            <div class="stat-card">
+                <div class="stat-number">28</div>
+                <div class="stat-label">عالماً</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">4</div>
+                <div class="stat-label">حضارات</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">5</div>
+                <div class="stat-label">عصور</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">100+</div>
+                <div class="stat-label">إنجاز</div>
+            </div>
+        </div>
+        
+        <input type="text" class="search-box" id="searchBox" placeholder="🔍 ابحث عن عالم أو إنجاز..." onkeyup="filterTable()">
+        
+        <!-- جدول العلماء -->
+        <div class="table-wrapper">
+            <h2 class="section-title"><span class="icon">👨‍🔬</span> جدول علماء الرياضيات وأهم أعمالهم</h2>
+            <table id="scientistsTable">
+                <thead>
+                    <tr>
+                        <th style="width:18%">العالم</th>
+                        <th style="width:12%">الفترة</th>
+                        <th style="width:15%">العصر / الحضارة</th>
+                        <th style="width:30%">أهم الأعمال والإنجازات</th>
+                        <th style="width:25%">الفصل</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- الفصل الرابع - الحضارات القديمة -->
+                    <tr>
+                        <td><span class="scientist-name">المصريون القدماء</span></td>
+                        <td class="period">3000 ق.م</td>
+                        <td><span class="chapter-badge badge-ancient">الحضارة المصرية</span></td>
+                        <td>
+                            <ul class="works-list">
+                                <li>معادلات من الدرجة الأولى والثانية</li>
+                                <li>حساب حجم الهرم الناقص</li>
+                                <li>استخدام "الكومة" للعدد المجهول</li>
+                                <li>بردية أحمس (مسائل جبرية)</li>
+                                <li>بناء الأهرامات (دليل كفاءة هندسية)</li>
+                            </ul>
+                        </td>
+                        <td><span class="chapter-badge badge-ch4">الفصل الرابع</span> الجبر والهندسة</td>
+                    </tr>
+                    <tr>
+                        <td><span class="scientist-name">البابليون</span></td>
+                        <td class="period">2000 ق.م</td>
+                        <td><span class="chapter-badge badge-ancient">الحضارة البابلية</span></td>
+                        <td>
+                            <ul class="works-list">
+                                <li>مرحلة جبرية ناضجة (صورة كلامية)</li>
+                                <li>جداول للأرباح المركبة</li>
+                                <li>حل معادلات من الدرجة الثانية والثالثة</li>
+                                <li>الثالثيات (مثلثات قائمة الزوايا)</li>
+                            </ul>
+                        </td>
+                        <td><span class="chapter-badge badge-ch4">الفصل الرابع</span> الجبر والهندسة</td>
+                    </tr>
+                    <tr>
+                        <td><span class="scientist-name">إقليدس</span></td>
+                        <td class="period">330-275 ق.م</td>
+                        <td><span class="chapter-badge badge-ancient">الإغريق - الإسكندرية</span></td>
+                        <td>
+                            <ul class="works-list">
+                                <li>كتاب "العناصر" (Elements) - أهم كتاب رياضي</li>
+                                <li>نظرية الأعداد (الأعداد الكاملة، أعداد ميرسين)</li>
+                                <li>لمبرهنة إقليدس (GCD)</li>
+                                <li>الخوارزمية الإقليدية للتحليل إلى عوامل أولية</li>
+                                <li>برهان عدم نهاية الأعداد الأولية</li>
+                            </ul>
+                        </td>
+                        <td><span class="chapter-badge badge-ch4">الفصل الرابع</span> الهندسة الإغريقية<br><span class="chapter-badge badge-ch5">الفصل الخامس</span> الإسكندرية</td>
+                    </tr>
+                    <tr>
+                        <td><span class="scientist-name">فيثاغورس</span></td>
+                        <td class="period">580-500 ق.م</td>
+                        <td><span class="chapter-badge badge-ancient">الإغريق</span></td>
+                        <td>
+                            <ul class="works-list">
+                                <li>أول من طبع الهندسة بطابعها المنطقي</li>
+                                <li>نظرية فيثاغورس (a² + b² = c²)</li>
+                                <li>اكتشاف الأعداد غير النسبية</li>
+                                <li>دراسة طبيعة الأعداد الطبيعية</li>
+                            </ul>
+                        </td>
+                        <td><span class="chapter-badge badge-ch4">الفصل الرابع</span> الهندسة الإغريقية</td>
+                    </tr>
+                    <tr>
+                        <td><span class="scientist-name">أرخميدس</span></td>
+                        <td class="period">287-212 ق.م</td>
+                        <td><span class="chapter-badge badge-ancient">الإغريق - سيراكوسا</span></td>
+                        <td>
+                            <ul class="works-list">
+                                <li>أسس الهندسة التحليلية</li>
+                                <li>تقريب قيمة π بدقة عالية</li>
+                                <li>قانون الطفو (أوريكا!)</li>
+                                <li>آلة أرخميدس (رفع الماء)</li>
+                                <li>أسس الميكانيكا وعلم السكونيات</li>
+                                <li>حساب المساحات والحجوم بالطريقة الحديثة</li>
+                            </ul>
+                        </td>
+                        <td><span class="chapter-badge badge-ch5">الفصل الخامس</span> الإسكندرية</td>
+                    </tr>
+                    <tr>
+                        <td><span class="scientist-name">أبولونيوس</span></td>
+                        <td class="period">262-190 ق.م</span></td>
+                        <td><span class="chapter-badge badge-ancient">الإغريق - بيرغا</span></td>
+                        <td>
+                            <ul class="works-list">
+                                <li>كتاب "المقاطع المخروطية"</li>
+                                <li>تسمية القطع المكافئ والزائد والناقص</li>
+                                <li>توسيع نظرية فيثاغورس</li>
+                                <li>معالجة الأعداد الكبيرة</li>
+                            </ul>
+                        </td>
+                        <td><span class="chapter-badge badge-ch5">الفصل الخامس</span> الإسكندرية</td>
+                    </tr>
+                    <tr>
+                        <td><span class="scientist-name">إراتوستينس</span></td>
+                        <td class="period">276-194 ق.م</td>
+                        <td><span class="chapter-badge badge-ancient">الإغريق - الإسكندرية</span></td>
+                        <td>
+                            <ul class="works-list">
+                                <li>أول من حسب محيط الأرض بدقة</li>
+                                <li>غربال إراتوستينس (الأعداد الأولية)</li>
+                                <li>متتالية فيبوناتشي والنسبة الذهبية</li>
+                                <li>جغرافي وفلكي بارع</li>
+                            </ul>
+                        </td>
+                        <td><span class="chapter-badge badge-ch5">الفصل الخامس</span> الإسكندرية</td>
+                    </tr>
+                    
+                    <!-- الفصل الرابع - العلماء المسلمين -->
+                    <tr>
+                        <td><span class="scientist-name">الخوارزمي</span><br><small>محمد بن موسى</small></td>
+                        <td class="period">780-850 م<br>(164-232 هـ)</td>
+                        <td><span class="chapter-badge badge-islamic">العصر الإسلامي</span></td>
+                        <td>
+                            <ul class="works-list">
+                                <li>مؤسس علم الجبر كعلم مستقل</li>
+                                <li>أول من استعمل كلمة "جبر"</li>
+                                <li>أول من ألف في الجبر (كتاب الجبر والمقابلة)</li>
+                                <li>أدخل الأرقام الهندية (العربية)</li>
+                                <li>أول من أدخل الصفر في الحساب</li>
+                                <li>وضع أسس علم الجبر</li>
+                                <li>أول من استخدم "السيم" (نصف الوتر)</li>
+                                <li>طرق لمساحة السطوح وحجوم الأهرامات</li>
+                            </ul>
+                        </td>
+                        <td><span class="chapter-badge badge-ch4">الفصل الرابع</span> الجبر الإسلامي</td>
+                    </tr>
+                    <tr>
+                        <td><span class="scientist-name">عمر الخيام</span><br><small>أبو الفتح عمر بن إبراهيم</small></td>
+                        <td class="period">1048-1131 م<br>(440-517 هـ)</td>
+                        <td><span class="chapter-badge badge-islamic">العصر الإسلامي</span></td>
+                        <td>
+                            <ul class="works-list">
+                                <li>حل المعادلات التكعيبية هندسياً</li>
+                                <li>صنف المعادلات (6 بسيطة + 12 مركبة)</li>
+                                <li>نظرية ذات الحدين (فك المقدار الجبري)</li>
+                                <li>إثبات نظرية المتوازيات (8 نظريات)</li>
+                                <li>استنتج طول السنة الشمسية بدقة</li>
+                            </ul>
+                        </td>
+                        <td><span class="chapter-badge badge-ch4">الفصل الرابع</span> الجبر الإسلامي</td>
+                    </tr>
+                    <tr>
+                        <td><span class="scientist-name">الكاشي</span><br><small>غياث الدين جمشيد</small></td>
+                        <td class="period">ت 1429 م<br>(ت 832 هـ)</td>
+                        <td><span class="chapter-badge badge-islamic">العصر الإسلامي</span></td>
+                        <td>
+                            <ul class="works-list">
+                                <li>ابتكر الكسور العشرية</li>
+                                <li>قانون لمجموع الأعداد المرفوعة للقوة الرابعة</li>
+                                <li>قيمة π بدقة 16 رقم عشري</li>
+                                <li>كتاب "مفتاح الحساب"</li>
+                                <li>بنى مرصد سمرقند</li>
+                            </ul>
+                        </td>
+                        <td><span class="chapter-badge badge-ch4">الفصل الرابع</span> الجبر الإسلامي</td>
+                    </tr>
+                    <tr>
+                        <td><span class="scientist-name">نصير الدين الطوسي</span><br><small>أبو جعفر محمد</small></td>
+                        <td class="period">1201-1274 م<br>(597-672 هـ)</td>
+                        <td><span class="chapter-badge badge-islamic">العصر الإسلامي</span></td>
+                        <td>
+                            <ul class="works-list">
+                                <li>تطوير نظريات الجيب للزاوية</li>
+                                <li>أول من قدم المتطابقات المثلثية للمثلث الكرة</li>
+                                <li>قاعدة الأشكال المكتملة (قانون الجيوب)</li>
+                                <li>أسس الهندسة اللاإقليدية</li>
+                                <li>برهن تساوي زاويتي السقوط والانعكاس</li>
+                                <li>كتاب "تحرير أصول إقليدس"</li>
+                                <li>أكثر من 45 كتاباً في الرياضيات</li>
+                            </ul>
+                        </td>
+                        <td><span class="chapter-badge badge-ch4">الفصل الرابع</span> الجبر الإسلامي</td>
+                    </tr>
+                    <tr>
+                        <td><span class="scientist-name">ثابت بن قرة</span><br><small>أبو الحسن ثابت بن قرة بن مروان</small></td>
+                        <td class="period">836-901 م<br>(221-288 هـ)</td>
+                        <td><span class="chapter-badge badge-islamic">العصر الإسلامي</span></td>
+                        <td>
+                            <ul class="works-list">
+                                <li>أعظم هندسي عربي على الإطلاق</li>
+                                <li>أوجد التكامل والتفاضل (حجم الجسم الدوار)</li>
+                                <li>أول من بحث في المربعات السحرية بعد الصينيين</li>
+                                <li>ابتدع طريقة لتقسيم الزاوية</li>
+                                <li>قاعدة الأعداد المتحابة</li>
+                            </ul>
+                        </td>
+                        <td><span class="chapter-badge badge-ch4">الفصل الرابع</span> الجبر الإسلامي</td>
+                    </tr>
+                    <tr>
+                        <td><span class="scientist-name">ابن الهيثم</span><br><small>أبو علي الحسن بن الهيثم</small></td>
+                        <td class="period">965-1040 م<br>(354-430 هـ)</td>
+                        <td><span class="chapter-badge badge-islamic">العصر الإسلامي</span></td>
+                        <td>
+                            <ul class="works-list">
+                                <li>كتاب "المناظر" (أساس علم البصريات)</li>
+                                <li>نفى نظرية بطليموس في الرؤية</li>
+                                <li>أسسيات العدسات وشرح العين تشريحياً</li>
+                                <li>قوانين الانعكاس والانكسار (سبق سنيل)</li>
+                                <li>المرايا المحرقة بالقطوع والدوائر</li>
+                                <li>أكثر من 80 كتاباً ورسالة</li>
+                            </ul>
+                        </td>
+                        <td><span class="chapter-badge badge-ch4">الفصل الرابع</span> الجبر الإسلامي</td>
+                    </tr>
+                    <tr>
+                        <td><span class="scientist-name">أبو كامل شجاع</span><br><small>ابن أسلم المصري</small></td>
+                        <td class="period">ت 881 م<br>(ت 267 هـ)</td>
+                        <td><span class="chapter-badge badge-islamic">العصر الإسلامي</span></td>
+                        <td>
+                            <ul class="works-list">
+                                <li>كتاب "الجموع والتفريق"</li>
+                                <li>كتاب "الخطأين" (حل المسائل الرياضية)</li>
+                                <li>كتاب "الجبر والمقابلة" (تكميلاً للخوارزمي)</li>
+                                <li>كتاب "الوصايا بالجذور"</li>
+                            </ul>
+                        </td>
+                        <td><span class="chapter-badge badge-ch4">الفصل الرابع</span> الجبر الإسلامي</td>
+                    </tr>
+                    <tr>
+                        <td><span class="scientist-name">البتاني</span><br><small>محمد بن جابر بن سنان</small></td>
+                        <td class="period">ت 929 م<br>(ت 317 هـ)</td>
+                        <td><span class="chapter-badge badge-islamic">العصر الإسلامي</span></td>
+                        <td>
+                            <ul class="works-list">
+                                <li>أدخل الجيب بدلاً من الوتر</li>
+                                <li>أول من عمل الجداول الرياضية للظل والمماس</li>
+                                <li>قانون تناسب الجيوب</li>
+                                <li>المعادلات المثلثية الكروية</li>
+                            </ul>
+                        </td>
+                        <td><span class="chapter-badge badge-ch4">الفصل الرابع</span> الجبر الإسلامي</td>
+                    </tr>
+                    <tr>
+                        <td><span class="scientist-name">أبو الوفاء البوزجاني</span><br><small>محمد بن يحيى بن إسماعيل</small></td>
+                        <td class="period">940-998 م<br>(328-388 هـ)</td>
+                        <td><span class="chapter-badge badge-islamic">العصر الإسلامي</span></td>
+                        <td>
+                            <ul class="works-list">
+                                <li>حل معادلات جبرية هندسياً</li>
+                                <li>حلول جديدة للقطع المكافئ (أساس التفاضل والتكامل)</li>
+                                <li>طريقة جديدة لحساب جداول الجيب</li>
+                                <li>أول من عرف الصلة (sin²+cos²=1)</li>
+                                <li>أول من وضع النسبة المثلثية (tan)</li>
+                                <li>ابتكر حل المعادلة من الدرجة الرابعة</li>
+                                <li>أول من اكتشف معادلة سرعة القمر</li>
+                            </ul>
+                        </td>
+                        <td><span class="chapter-badge badge-ch4">الفصل الرابع</span> الجبر الإسلامي</td>
+                    </tr>
+                    <tr>
+                        <td><span class="scientist-name">القمصادي</span><br><small>أبو الحسن علي بن محمد</small></td>
+                        <td class="period">890-1486 م</td>
+                        <td><span class="chapter-badge badge-islamic">العصر الإسلامي</span></td>
+                        <td>
+                            <ul class="works-list">
+                                <li>أول من استخدم الرموز في الجبر</li>
+                                <li>رموز: جـ (جذر)، ش (شيء/مجهول)، م (مال)</li>
+                                <li>قيمة تقريبية للجذر التربيعي</li>
+                                <li>كتاب "كشف الجنبا"</li>
+                            </ul>
+                        </td>
+                        <td><span class="chapter-badge badge-ch4">الفصل الرابع</span> الجبر الإسلامي</td>
+                    </tr>
+                    <tr>
+                        <td><span class="scientist-name">بهاء الدين العاملي</span><br><small>محمد بن حسين</small></td>
+                        <td class="period">1547-1622 م<br>(953-1030 هـ)</td>
+                        <td><span class="chapter-badge badge-islamic">العصر الإسلامي</span></td>
+                        <td>
+                            <ul class="works-list">
+                                <li>طريقة جديدة لإيجاد الجذور التقريبية</li>
+                                <li>طريقة الكفتين (الميزان)</li>
+                                <li>كتاب "خالصة الحساب" (10 أبواب)</li>
+                                <li>سبق نيوتن في طريقة إيجاد الجذور</li>
+                            </ul>
+                        </td>
+                        <td><span class="chapter-badge badge-ch4">الفصل الرابع</span> الجبر الإسلامي</td>
+                    </tr>
+                    
+                    <!-- الفصل الخامس - عصر النهضة والحديث -->
+                    <tr>
+                        <td><span class="scientist-name">غاليليو غاليلي</span></td>
+                        <td class="period">1564-1642 م</td>
+                        <td><span class="chapter-badge badge-renaissance">عصر النهضة</span></td>
+                        <td>
+                            <ul class="works-list">
+                                <li>مؤسس الميكانيكا الكلاسيكية</li>
+                                <li>كتاب "الميزان الصغير" (1586)</li>
+                                <li>الأجسام تسقط بحركة منتظمة متسارعة</li>
+                                <li>الكواكب تدور في مسارات إهليلجية</li>
+                                <li>فرضية المقذوفات (تركيب حركتين)</li>
+                            </ul>
+                        </td>
+                        <td><span class="chapter-badge badge-ch5">الفصل الخامس</span> العصر الحديث</td>
+                    </tr>
+                    <tr>
+                        <td><span class="scientist-name">رينيه ديكارت</span></td>
+                        <td class="period">1596-1650 م</td>
+                        <td><span class="chapter-badge badge-renaissance">عصر النهضة</span></td>
+                        <td>
+                            <ul class="works-list">
+                                <li>"أنا أفكر إذاً أنا موجود"</li>
+                                <li>أسس المنهج الاستنباطي</li>
+                                <li>الهندسة التحليلية (ربط الجبر بالهندسة)</li>
+                                <li>كتاب "الهندسة" (1637) - 3 أجزاء</li>
+                                <li>حل المعادلات من الدرجة الثالثة والرابعة</li>
+                            </ul>
+                        </td>
+                        <td><span class="chapter-badge badge-ch5">الفصل الخامس</span> العصر الحديث</td>
+                    </tr>
+                    <tr>
+                        <td><span class="scientist-name">إسحاق نيوتن</span></td>
+                        <td class="period">1643-1727 م</td>
+                        <td><span class="chapter-badge badge-modern">العصر الحديث</span></td>
+                        <td>
+                            <ul class="works-list">
+                                <li>اخترع التفاضل والتكامل</li>
+                                <li>كتاب "المبادئ الرياضية" (1687)</li>
+                                <li>قوانين الحركة الثلاثة</li>
+                                <li>قانون الجذب العام (F=Gm₁m₂/r²)</li>
+                                <li>البرهان على كروية الأرض</li>
+                                <li>كتاب "البصريات"</li>
+                                <li>التلسكوب العاكس</li>
+                                <li>المعادلات التفاضلية</li>
+                            </ul>
+                        </td>
+                        <td><span class="chapter-badge badge-ch5">الفصل الخامس</span> العصر الحديث</td>
+                    </tr>
+                    <tr>
+                        <td><span class="scientist-name">ليونارد أويلر</span></td>
+                        <td class="period">1707-1783 م</td>
+                        <td><span class="chapter-badge badge-modern">العصر الحديث</span></td>
+                        <td>
+                            <ul class="works-list">
+                                <li>أكثر من 400 ورقة بحثية وكتاب</li>
+                                <li>أسس الهندسة التحليلية</li>
+                                <li>حساب المثلثات</li>
+                                <li>توحيد الرياضيات</li>
+                                <li>نظرية الأعداد والتحليل الرياضي</li>
+                            </ul>
+                        </td>
+                        <td><span class="chapter-badge badge-ch5">الفصل الخامس</span> العصر الحديث</td>
+                    </tr>
+                    <tr>
+                        <td><span class="scientist-name">كارل فريدريش جاوس</span></td>
+                        <td class="period">1777-1855 م</td>
+                        <td><span class="chapter-badge badge-modern">العصر الحديث</span></td>
+                        <td>
+                            <ul class="works-list">
+                                <li>"أمير الرياضيين"</li>
+                                <li>كتاب "التحقيقات الحسابية" (1801)</li>
+                                <li>أسس نظرية الأعداد كفرع مستقل</li>
+                                <li>أسس الإحصاء والفلك والتحليل</li>
+                                <li>أدخل الرياضيات إلى فيزياء الكهرباء</li>
+                                <li>المساحة الرياضية الدقيقة</li>
+                            </ul>
+                        </td>
+                        <td><span class="chapter-badge badge-ch5">الفصل الخامس</span> العصر الحديث</td>
+                    </tr>
+                    <tr>
+                        <td><span class="scientist-name">ألبرت أينشتاين</span></td>
+                        <td class="period">1879-1955 م</td>
+                        <td><span class="chapter-badge badge-modern">العصر الحديث</span></td>
+                        <td>
+                            <ul class="works-list">
+                                <li>النظرية النسبية الخاصة (1905): E=mc²</li>
+                                <li>النظرية الكمية للضوء (فوتونات)</li>
+                                <li>التأثير الكهروضوئي (نوبل 1921)</li>
+                                <li>النظرية النسبية العامة (1917)</li>
+                                <li>الإشعاع المثار (أساس الليزر)</li>
+                                <li>الجاذبية = انحناء الزمكان</li>
+                            </ul>
+                        </td>
+                        <td><span class="chapter-badge badge-ch5">الفصل الخامس</span> العصر الحديث</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- جدول الأسئلة المهمة -->
+        <div class="table-wrapper">
+            <h2 class="section-title"><span class="icon">❓</span> أهم الأسئلة المتوقعة</h2>
+            <table id="questionsTable">
+                <thead>
+                    <tr>
+                        <th style="width:5%">#</th>
+                        <th style="width:45%">السؤال</th>
+                        <th style="width:50%">الإجابة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">1</td>
+                        <td>ما هي مراحل تطور الجبر حسب المؤرخ نيسيمبان؟</td>
+                        <td>المرحلة الكلامية (كلمات وألفاظ) → المرحلة المختصرة (كلمات مختزلة) → المرحلة الرمزية (رموز كاملة)</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">2</td>
+                        <td>لماذا لم يتقدم الجبر قبل الحضارة الإسلامية؟</td>
+                        <td>لأنه كان يحتاج إلى: لغة إصطلاحية رمزية بسيطة، واكتشاف الصفر، وتطور مفهوم العدد ليشمل الطبيعية والصحيحة والنسبية وغير النسبية والحقيقية والتخيلية</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">3</td>
+                        <td>ما هي "الكومة" عند المصريين القدماء؟</td>
+                        <td>العدد المجهول (المعادل لـ "س" في الجبر الحديث)</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">4</td>
+                        <td>ما هو حل مسألة "كومة وسبعها يساوي تسعة عشر"؟</td>
+                        <td>س + س/7 = 19 → 8س/7 = 19 → س = 133/8 = 16.625</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">5</td>
+                        <td>ما هو قانون حجم الهرم الناقص عند المصريين؟</td>
+                        <td>الحجم = (الارتفاع/3) × (أ² + أ×ب + ب²) حيث أ,ب طولا ضلعي القاعدتين</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">6</td>
+                        <td>ما الفرق بين الجبر والمقابلة عند الخوارزمي؟</td>
+                        <td><strong>الجبر:</strong> نقل الحدود المنفية إلى الجانب الآخر<br><strong>المقابلة:</strong> توحيد الحدود المتماثلة</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">7</td>
+                        <td>من هو مؤسس علم الجبر كعلم مستقل؟</td>
+                        <td>الخوارزمي (محمد بن موسى الخوارزمي)</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">8</td>
+                        <td>من أول من أدخل الصفر في الحساب؟</td>
+                        <td>الخوارزمي</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">9</td>
+                        <td>ما هي المسلمة الخامسة لإقليدس؟</td>
+                        <td>إذا قطع مستقيم مستقيمين بحيث أن مجموع الزاويتين الداخليتين في جهة واحدة من القاطع أقل من قائمتين، فإنهما يلتقيان إذا مدا على استقامتهما</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">10</td>
+                        <td>من أول من أثبت نظرية المتوازيات؟</td>
+                        <td>عمر الخيام (برهن 8 نظريات تمهيدية)</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">11</td>
+                        <td>من أول من استخدم الرموز في الجبر؟</td>
+                        <td>القمصادي (رموز: جـ للجذر، ش للشيء/المجهول، م للمال، ك للمكعب، ل للمساواة)</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">12</td>
+                        <td>من أول من اكتشف الكسور العشرية؟</td>
+                        <td>الكاشي (قبل ستيفن بـ 75 سنة)</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">13</td>
+                        <td>من أول من وضع قانون الجيوب (قاعدة الأشكال المكتملة)؟</td>
+                        <td>نصير الدين الطوسي</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">14</td>
+                        <td>من أول من استخدم الجيب بدلاً من الوتر؟</td>
+                        <td>البتاني</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">15</td>
+                        <td>من أول من وضع النسبة المثلثية (الظل)؟</td>
+                        <td>أبو الوفاء البوزجاني</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">16</td>
+                        <td>من أول من اكتشف معادلة سرعة القمر؟</td>
+                        <td>أبو الوفاء البوزجاني (قبل تيخو براهي بقرون)</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">17</td>
+                        <td>من أول من حسب محيط الأرض؟</td>
+                        <td>إراتوستينس (النتيجة: حوالي 40,000 كم)</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">18</td>
+                        <td>ما هو غربال إراتوستينس؟</td>
+                        <td>طريقة لإيجاد الأعداد الأولية: اكتب الأعداد، احتفظ بالأول واشطب مضاعفاته، كرر للباقي</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">19</td>
+                        <td>من وضع قوانين الحركة الثلاثة؟</td>
+                        <td>إسحاق نيوتن في كتاب "المبادئ الرياضية للفلسفة الطبيعية" (1687)</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">20</td>
+                        <td>ما هو قانون نيوتن للجذب العام؟</td>
+                        <td>F = G × (m₁ × m₂) / r² حيث F القوة، G ثابت الجذب، m الكتلة، r المسافة</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">21</td>
+                        <td>من اخترع التفاضل والتكامل؟</td>
+                        <td>نيوتن وليبنيز (بشكل مستقل)</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">22</td>
+                        <td>ما هي مقولة ديكارت الشهيرة؟</td>
+                        <td>"أنا أفكر إذاً أنا موجود" (Cogito ergo sum)</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">23</td>
+                        <td>من أسس الهندسة التحليلية؟</td>
+                        <td>رينيه ديكارت (ربط الجبر بالهندسة بالإحداثيات)</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">24</td>
+                        <td>ما هي معادلة أينشتاين الشهيرة؟</td>
+                        <td>E = mc² (الطاقة = الكتلة × مربع سرعة الضوء)</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">25</td>
+                        <td>ما هو التأثير الكهروضوئي الذي حصل أينشتاين على نوبل لأجله؟</td>
+                        <td>الضوء ينزع إلكترونات من المعادن عند سقوطه عليها، مما يثبت أن الضوء يتكون من فوتونات (حزم طاقة)</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">26</td>
+                        <td>من يُلقب بـ"أمير الرياضيين"؟</td>
+                        <td>كارل فريدريش جاوس</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">27</td>
+                        <td>ما هو كتاب إقليدس الأشهر؟</td>
+                        <td>"العناصر" (Elements) - 13 كتاباً</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">28</td>
+                        <td>ما هي لمبرهنة إقليدس؟</td>
+                        <td>خوارزمية إيجاد المقسوم المشترك الأكبر (GCD) لعددين</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">29</td>
+                        <td>من قال "أوريكا!" ولماذا؟</td>
+                        <td>أرخميدس، عند اكتشاف قانون الطفو: الجسم المغمور يفقد من وزنه ما يعادل وزن السائل المزاح</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">30</td>
+                        <td>ما هي النسبة الذهبية؟</td>
+                        <td>φ = (1 + √5) / 2 ≈ 1.618033988... وهي نسبة تقترب إليها خارج قسمة أي عدد فيبوناتشي على السابق</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">31</td>
+                        <td>من أول من بحث في المربعات السحرية بعد الصينيين؟</td>
+                        <td>ثابت بن قرة</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">32</td>
+                        <td>من هو أعظم هندسي عربي على الإطلاق؟</td>
+                        <td>ثابت بن قرة</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">33</td>
+                        <td>ما هو كتاب ابن الهيثم الأشهر؟</td>
+                        <td>"المناظر" - أسس علم البصريات الحديث</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">34</td>
+                        <td>من سبق سنيل في قوانين الانكسار؟</td>
+                        <td>ابن الهيثم</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">35</td>
+                        <td>من أول من أثبت أن الأرض كروية رياضياً؟</td>
+                        <td>إسحاق نيوتن (في كتاب "المبادئ الرياضية")</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">36</td>
+                        <td>ما هي النظرية النسبية العامة لأينشتاين؟</td>
+                        <td>الجاذبية ليست قوة بل هي انحناء في الزمكان نتيجة للكتلة والطاقة</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">37</td>
+                        <td>من أسس نظرية الأعداد كفرع مستقل؟</td>
+                        <td>كارل فريدريش جاوس (كتاب "التحقيقات الحسابية" 1801)</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">38</td>
+                        <td>ما هي متتالية فيبوناتشي؟</td>
+                        <td>كل عدد هو مجموع العددين السابقين: 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55...</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">39</td>
+                        <td>من أول من وضع قاعدة الأعداد المتحابة؟</td>
+                        <td>ثابت بن قرة (أزواج نادرة من الأعداد)</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;font-weight:700;color:#feca57;">40</td>
+                        <td>ما هو كتاب "خالصة الحساب" ومن مؤلفه؟</td>
+                        <td>بهاء الدين العاملي - يتكون من 10 أبواب في الحساب والجبر والهندسة</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="footer">
+            <p>📖 تم إعداد هذا الجدول من الفصل الرابع والخامس - تاريخ الرياضيات</p>
+            <p>✨ بالتوفيق في الامتحان! ✨</p>
+        </div>
+    </div>
+    
+    <script>
+        function filterTable() {
+            const input = document.getElementById('searchBox');
+            const filter = input.value.toLowerCase();
+            const table = document.getElementById('scientistsTable');
+            const tr = table.getElementsByTagName('tr');
+            
+            for (let i = 1; i < tr.length; i++) {
+                const td = tr[i].getElementsByTagName('td');
+                let found = false;
+                for (let j = 0; j < td.length; j++) {
+                    if (td[j]) {
+                        const txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+                tr[i].style.display = found ? '' : 'none';
+            }
+        }
+    </script>
+</body>
+</html>"""
+
+# Save the file
+output_path = '/mnt/agents/output/scientists_table.html'
+with open(output_path, 'w', encoding='utf-8') as f:
+    f.write(html_content)
+
+print(f"✅ File saved successfully to: {output_path}")
+print(f"📊 File size: {len(html_content):,} characters")
+print(f"🔬 Total scientists: 28")
+print(f"❓ Total questions: 40")
